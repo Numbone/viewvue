@@ -1,26 +1,37 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
+import { ref } from 'vue'
+
+const order=ref(0)
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
+ <v-layout class="rounded rounded-md">
+    <v-navigation-drawer color="grey-darken-2" permanent></v-navigation-drawer>
 
-    <div class="wrapper">
-      <v-app-bar >
-        
-      </v-app-bar>
+    <v-app-bar
+      :order="order"
+      color="grey-lighten-2"
+      flat
+      title="Application bar"
+    >
+      <template v-slot:append>
+        <v-switch
+          v-model="order"
+          hide-details
+          inset
+          label="Toggle order"
+          true-value="-1"
+          false-value="0"
+        ></v-switch>
+      </template>
+    </v-app-bar>
 
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-        <RouterLink to="/test">Test</RouterLink>
-      </nav>
-    </div>
-  </header>
-
-  <RouterView />
+    <v-main class="d-flex align-center justify-center" style="min-height: 300px;">
+      Main Content
+    </v-main>
+  </v-layout>
 </template>
 
 <style scoped>
