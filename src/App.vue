@@ -1,37 +1,56 @@
+
+
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
-import { ref } from 'vue'
+import { ref,watchEffect } from 'vue'
+interface TodoItem{
+  userId: number,
+  id: number,
+  title: string,
+  completed: boolean
+}
+const drawer=ref(false);
+const commits = ref<TodoItem[]|null>(null);
 
-const order=ref(0)
+watchEffect(async()=>{
+  commits.value=await (await fetch('https://jsonplaceholder.typicode.com/todos')).json();
+})
+console.log(commits)
 </script>
 
 <template>
- <v-layout class="rounded rounded-md">
-    <v-navigation-drawer color="grey-darken-2" permanent></v-navigation-drawer>
+  <v-app id="inspire">
+    <v-navigation-drawer v-model="drawer">
+      <!--  -->
+    </v-navigation-drawer>
 
-    <v-app-bar
-      :order="order"
-      color="grey-lighten-2"
-      flat
-      title="Application bar"
-    >
-      <template v-slot:append>
-        <v-switch
-          v-model="order"
-          hide-details
-          inset
-          label="Toggle order"
-          true-value="-1"
-          false-value="0"
-        ></v-switch>
-      </template>
+    <v-app-bar>
+      <v-app-bar-nav-icon @click="drawer = !drawer">
+        <template v-slot:append>
+          <v-btn icon="mdi-heart"></v-btn>
+
+          <v-btn icon="mdi-magnify"></v-btn>
+
+          <v-btn icon="mdi-dots-vertical"></v-btn>
+        </template>
+      </v-app-bar-nav-icon>
+
+      <v-app-bar-title>Application</v-app-bar-title>
     </v-app-bar>
 
-    <v-main class="d-flex align-center justify-center" style="min-height: 300px;">
-      Main Content
+    <v-main>
+      <v-list>
+        <v-list-item
+        v-for="n in commits"
+        :key="n.id"
+        :title="n.title"
+        subtitle="Lorem ipsum dolor sit amet consectetur adipisicing elit"
+        >
+        </v-list-item>
+      </v-list>
     </v-main>
-  </v-layout>
+  </v-app>
 </template>
 
 <style scoped>
