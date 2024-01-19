@@ -1,30 +1,12 @@
 <script setup lang="ts">
-import "./main.css";
-import { ref, watchEffect } from 'vue';
-interface TodoItem{
-  userId: number,
-  id: number,
-  title: string,
-  completed: boolean
-}
-const drawer=ref(false);
-const commits = ref<TodoItem[]|null>(null);
-
-defineProps({
-  greeting:String
-})
-
-watchEffect(async()=>{
-  commits.value=await (await fetch('https://jsonplaceholder.typicode.com/todos')).json();
-})
+import './main.css'
+import HeaderComponent from '@/components/HeaderComponent.vue'
 </script>
 
 <template>
-  <div class="flex">
-    123
+  <div class="bg-white w-4/5 m-auto h-screen rounded-xl mt-14">
+    <HeaderComponent />
   </div>
- 
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>
