@@ -1,6 +1,6 @@
 <template>
   <div
-    class="relative m-10 border border-slate-100 rounded-3xl p-8 cursor-pointer transition hover:-translate-y-2 hover:shadow-xl"
+    class="relative bg-white border border-slate-100 rounded-3xl p-8 cursor-pointer transition hover:-translate-y-2 hover:shadow-xl"
   >
     <img class="absolute top-8 left-8" :src="Liked" alt="liked" />
     <img :src="Sneakers" alt="sneakers" />
