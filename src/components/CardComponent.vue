@@ -1,27 +1,38 @@
+<script setup lang="ts">
+defineProps({
+  imageUrl:String,
+  title:String,
+  price:Number,
+  isFavorite:Boolean,
+  isAdded:Boolean,
+  onClickAdd:Function,
+  onClickFavorite:Function
+})
+import Liked from '@/assets/icons/like-1.svg'
+import Like from '@/assets/icons/like-2.svg'
+import Sneakers from '@/assets/images/sneakers-1.jpg'
+import Plus from '@/assets/icons/plus.svg'
+import Checked from '@/assets/icons/checked.svg'
+</script>
+
 <template>
   <div
     class="relative bg-white border border-slate-100 rounded-3xl p-8 cursor-pointer transition hover:-translate-y-2 hover:shadow-xl"
   >
     <img class="absolute top-8 left-8" :src="Liked" alt="liked" />
-    <img :src="Sneakers" alt="sneakers" />
-    <p class="pt-2">Nike Blazer Mid Suede</p>
+    <img :onclick="onClickFavorite" :src="isFavorite ? Like : Liked" alt="sneakers" />
+    <p class="pt-2">{{title}}</p>
 
     <div class="flex justify-between mt-5">
       <div class="flex flex-col">
         <span class="text-slate-400">Price:</span>
-        <span>1222</span>
+        <span>{{price}}</span>
       </div>
 
-      <img :src="Plus" alt="" />
+      <img :on-click="onClickAdd" :src="!isAdded ? Plus : Checked" alt="" />
     </div>
   </div>
 </template>
 
-<script setup lang="ts">
-import Liked from '@/assets/icons/like-1.svg'
-import Like from '@/assets/icons/like-2.svg'
-import Sneakers from '@/assets/images/sneakers-1.jpg'
-import Plus from '@/assets/icons/plus.svg'
-</script>
 
 <style scoped></style>
