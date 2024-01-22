@@ -1,12 +1,12 @@
 <script setup lang="ts">
 defineProps({
-  imageUrl:String,
-  title:String,
-  price:Number,
-  isFavorite:Boolean,
-  isAdded:Boolean,
-  onClickAdd:Function,
-  onClickFavorite:Function
+  imageUrl: String,
+  title: String,
+  price: Number,
+  isFavorite: Boolean,
+  isAdded: Boolean,
+  onClickAdd: Function,
+  onClickFavorite: Function
 })
 import Liked from '@/assets/icons/like-1.svg'
 import Like from '@/assets/icons/like-2.svg'
@@ -21,18 +21,17 @@ import Checked from '@/assets/icons/checked.svg'
   >
     <img class="absolute top-8 left-8" :src="Liked" alt="liked" />
     <img :onclick="onClickFavorite" :src="isFavorite ? Like : Liked" alt="sneakers" />
-    <p class="pt-2">{{title}}</p>
+    <p class="pt-2">{{ title }}</p>
 
     <div class="flex justify-between mt-5">
       <div class="flex flex-col">
         <span class="text-slate-400">Price:</span>
-        <span>{{price}}</span>
+        <span>{{ price }}</span>
       </div>
 
       <img :on-click="onClickAdd" :src="!isAdded ? Plus : Checked" alt="" />
     </div>
   </div>
 </template>
-
 
 <style scoped></style>
