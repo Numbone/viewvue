@@ -1,18 +1,11 @@
 <script setup lang="ts">
-defineProps({
-  imageUrl: String,
-  title: String,
-  price: Number,
-  isFavorite: Boolean,
-  isAdded: Boolean,
-  onClickAdd: Function,
-  onClickFavorite: Function
-})
+import type { Card } from '@/types/Card';
 import Liked from '@/assets/icons/like-1.svg'
 import Like from '@/assets/icons/like-2.svg'
 import Sneakers from '@/assets/images/sneakers-1.jpg'
 import Plus from '@/assets/icons/plus.svg'
 import Checked from '@/assets/icons/checked.svg'
+const {isAdded,isFavorite,onClickAdd,onClickFavorite,price,title} = defineProps<Card>()
 </script>
 
 <template>
