@@ -4,6 +4,39 @@ import HeaderComponent from '@/components/HeaderComponent.vue'
 import CardList from '@/components/CardList.vue'
 import DrawerModal from './components/DrawerModal.vue'
 import Search from './assets/icons/search.svg'
+import { onMounted } from 'vue'
+import axios from 'axios'
+import { ref, watch, reactive } from 'vue'
+import type { Card } from './types/Card'
+
+const filter = reactive({
+  sortBy: '',
+  searchQuery: ''
+})
+
+const items = ref<Card[]>([]);
+onMounted(async () => {
+  try {
+    const { data } = await axios.get<Card[]>('https://604781a0efa572c1.mokky.dev/items')
+    items.value = data
+  } catch (error) {
+    console.log(error)
+  }
+})
+watch(()=>filter.sortBy, async () => {
+  try {
+    console.log(filter.sortBy)
+    const { data } = await axios.get<Card[]>(
+     
+      'https://604781a0efa572c1.mokky.dev/items?sortBy=' + filter.sortBy
+    )
+    console.log(data)
+    items.value = data
+  } catch (error) {
+    console.log(error)
+  }
+})
+console.log(filter.sortBy, 'items')
 </script>
 
 <template>
@@ -14,10 +47,10 @@ import Search from './assets/icons/search.svg'
       <div class="flex justify-between items-center">
         <h2 class="text-3xl font mb-8">All Items</h2>
         <div class="flex gap-4">
-          <select class="px-3 py-2 border rounded-md outline-none">
-            <option>By name</option>
-            <option>By price Asc</option>
-            <option>by price desc</option>
+          <select  v-model="filter.sortBy" class="px-3 py-2 border rounded-md outline-none">
+            <option value="name">By name</option>
+            <option value="price">By price Asc</option>
+            <option value="-price">by price desc</option>
           </select>
 
           <div class="relative">
@@ -31,7 +64,7 @@ import Search from './assets/icons/search.svg'
         </div>
       </div>
 
-      <CardList />
+      <CardList :items="items" />
     </div>
   </div>
 </template>
