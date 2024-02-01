@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Card } from '@/types/Card';
+import type { Card } from '@/types/Card'
 import Liked from '@/assets/icons/like-1.svg'
 import Like from '@/assets/icons/like-2.svg'
 import Sneakers from '@/assets/images/sneakers-1.jpg'
@@ -8,12 +8,12 @@ import Checked from '@/assets/icons/checked.svg'
 defineProps<Card>()
 </script>
 
-<template >
+<template>
   <div
     class="relative bg-white border border-slate-100 rounded-3xl p-8 cursor-pointer transition hover:-translate-y-2 hover:shadow-xl"
   >
     <img class="absolute top-8 left-8" :src="Liked" alt="liked" />
-    <img :onclick="onClickFavorite" :src="`/src/assets/images`+imageUrl" alt="sneakers" />
+    <img :onclick="onClickFavorite" :src="`/src/assets/images` + imageUrl" alt="sneakers" />
     <p class="pt-2">{{ title }}</p>
 
     <div class="flex justify-between mt-5">

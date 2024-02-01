@@ -1,6 +1,6 @@
 <template>
   <div class="grid grid-cols-4 gap-5">
-    <CardItem v-for="(item,index) in items" v-bind="item" :key="index"  />
+    <CardItem v-for="(item, index) in items" v-bind="item" :key="index" />
   </div>
 </template>
 

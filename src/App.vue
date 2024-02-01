@@ -1,33 +1,33 @@
 <script setup lang="ts">
-import './main.css'
-import HeaderComponent from '@/components/HeaderComponent.vue'
 import CardList from '@/components/CardList.vue'
-import DrawerModal from './components/DrawerModal.vue'
-import Search from './assets/icons/search.svg'
-import { onMounted } from 'vue'
+import HeaderComponent from '@/components/HeaderComponent.vue'
 import axios from 'axios'
-import { ref, watch, reactive } from 'vue'
+import { onMounted, reactive, ref, watch } from 'vue'
+import Search from './assets/icons/search.svg'
+import './main.css'
 import type { Card } from './types/Card'
-
+const items = ref<Card[]>([])
 const filter = reactive({
   sortBy: '',
   searchQuery: ''
 })
-
-const items = ref<Card[]>([]);
-onMounted(async () => {
+const fetchItems = async () => {
   try {
     const { data } = await axios.get<Card[]>('https://604781a0efa572c1.mokky.dev/items')
-    items.value = data
+    items.value = data.map((obj) => ({
+      ...obj,
+      isFavorite: true,
+      isAdded: false
+    }))
   } catch (error) {
     console.log(error)
   }
-})
-watch(()=>filter.sortBy, async () => {
+}
+
+const sortedItems = async () => {
   try {
     console.log(filter.sortBy)
     const { data } = await axios.get<Card[]>(
-     
       'https://604781a0efa572c1.mokky.dev/items?sortBy=' + filter.sortBy
     )
     console.log(data)
@@ -35,8 +35,35 @@ watch(()=>filter.sortBy, async () => {
   } catch (error) {
     console.log(error)
   }
+}
+
+const fetchFavorites = async () => {
+  try {
+    const { data: favorites } = await axios.get<Card[]>(
+      'https://604781a0efa572c1.mokky.dev/favorites'
+    )
+
+    items.value = items.value.map((obj) => {
+      const favorite = favorites.find((item) => item.parentId === obj.id)
+      if (!favorite) {
+        return obj
+      }
+      return {
+        ...obj,
+        isFavorite: true,
+        favoriteId: favorite.id
+      }
+    })
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+onMounted(async () => {
+  await fetchItems()
+  await fetchFavorites()
 })
-console.log(filter.sortBy, 'items')
+watch(() => filter.sortBy, sortedItems)
 </script>
 
 <template>
@@ -47,7 +74,7 @@ console.log(filter.sortBy, 'items')
       <div class="flex justify-between items-center">
         <h2 class="text-3xl font mb-8">All Items</h2>
         <div class="flex gap-4">
-          <select  v-model="filter.sortBy" class="px-3 py-2 border rounded-md outline-none">
+          <select v-model="filter.sortBy" class="px-3 py-2 border rounded-md outline-none">
             <option value="name">By name</option>
             <option value="price">By price Asc</option>
             <option value="-price">by price desc</option>
