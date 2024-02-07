@@ -6,7 +6,14 @@ import { onMounted, provide, reactive, ref, watch } from 'vue'
 import Search from './assets/icons/search.svg'
 import './main.css'
 import type { Card, Params } from './types'
-const items = ref<Card[]>([])
+import DrawerModal from './components/DrawerModal.vue'
+const items = ref<Card[]>([]);
+const onDrawerOpen=ref(false);
+
+const onChangeModal=()=>{
+  onDrawerOpen.value=!onDrawerOpen.value
+}
+
 const filter = reactive({
   sortBy: '',
   searchQuery: ''
@@ -92,8 +99,8 @@ watch(() => filter.sortBy, fetchItems)
 
 <template>
   <div class="bg-white w-4/5 m-auto rounded-xl mt-14">
-    <!-- <DrawerModal/> -->
-    <HeaderComponent />
+     <DrawerModal v-if="onDrawerOpen"/>
+    <HeaderComponent @onOpen="onChangeModal" />
     <div class="p-10">
       <div class="flex justify-between items-center">
         <h2 class="text-3xl font mb-8">All Items</h2>

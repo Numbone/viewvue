@@ -3,6 +3,10 @@ import Logo from '@/assets/images/logo.png'
 import Cart from '@/assets/icons/cart.svg'
 import Heart from '@/assets/icons/heart.svg'
 import Profile from '@/assets/icons/profile.svg'
+import { defineEmits } from 'vue'
+const emit =defineEmits([
+  'onOpen'
+])
 </script>
 
 <template>
@@ -16,7 +20,8 @@ import Profile from '@/assets/icons/profile.svg'
     </div>
 
     <ul class="flex items-center gap-10">
-      <li class="flex items-center gap-3 text-slate-400 hover:text-black cursor-pointer">
+      <li class="flex items-center gap-3 text-slate-400 hover:text-black cursor-pointer"
+      @click="()=>emit('onOpen')">
         <img :src="Cart" alt="cart" />
         <span>1205 tg</span>
       </li>
