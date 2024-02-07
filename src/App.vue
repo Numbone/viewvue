@@ -12,15 +12,21 @@ const filter = reactive({
   searchQuery: ''
 })
 const addFavorite = async (item: Card) => {
-  const obj={
-    parentId:item.id
+  const obj = {
+    parentId: item.id
   }
   try {
-    const { data } = await axios.post('https://604781a0efa572c1.mokky.dev/favorites',{
-      obj
-    })
-    console.log(data)
-    item.isFavorite=true;
+    if (!item.isFavorite) {
+      const { data } = await axios.post('https://604781a0efa572c1.mokky.dev/favorites', {
+        obj
+      })
+      console.log(data)
+      item.isFavorite = true
+      item.favoriteId = data.id
+    }else{
+      await axios.delete('https://604781a0efa572c1.mokky.dev/favorites/'+item.favoriteId);
+      item.isFavorite=false
+    }
   } catch (error) {
     console.log(error)
   }
@@ -47,7 +53,8 @@ const fetchItems = async () => {
     items.value = data.map((obj) => ({
       ...obj,
       isFavorite: true,
-      isAdded: false
+      isAdded: false,
+      favoriteId:undefined
     }))
   } catch (error) {
     console.log(error)
