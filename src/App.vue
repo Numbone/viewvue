@@ -99,7 +99,7 @@ watch(() => filter.sortBy, fetchItems)
 
 <template>
   <div class="bg-white w-4/5 m-auto rounded-xl mt-14">
-     <DrawerModal v-if="onDrawerOpen"/>
+     <DrawerModal  @onOpen="onChangeModal" v-if="onDrawerOpen"/>
     <HeaderComponent @onOpen="onChangeModal" />
     <div class="p-10">
       <div class="flex justify-between items-center">
