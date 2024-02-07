@@ -2,36 +2,53 @@
 import CardList from '@/components/CardList.vue'
 import HeaderComponent from '@/components/HeaderComponent.vue'
 import axios from 'axios'
-import { onMounted, reactive, ref, watch } from 'vue'
+import { onMounted, provide, reactive, ref, watch } from 'vue'
 import Search from './assets/icons/search.svg'
 import './main.css'
-import type { Card } from './types/Card'
+import type { Card, Params } from './types'
 const items = ref<Card[]>([])
 const filter = reactive({
   sortBy: '',
   searchQuery: ''
 })
+const addFavorite = async (item: Card) => {
+  const obj={
+    parentId:item.id
+  }
+  try {
+    const { data } = await axios.post('https://604781a0efa572c1.mokky.dev/favorites',{
+      obj
+    })
+    console.log(data)
+    item.isFavorite=true;
+  } catch (error) {
+    console.log(error)
+  }
+  item.isFavorite = !item.isFavorite
+}
+
+const addFavoriteEmit = async (item: Card) => {
+  item.isFavorite = !item.isFavorite
+}
+
+provide('addFavorite', addFavorite)
 const fetchItems = async () => {
   try {
-    const { data } = await axios.get<Card[]>('https://604781a0efa572c1.mokky.dev/items')
+    const params: Params = {
+      sortBy: filter.sortBy
+    }
+
+    if (filter.searchQuery) {
+      params.title = `*${filter.searchQuery}`
+    }
+    const { data } = await axios.get<Card[]>('https://604781a0efa572c1.mokky.dev/items', {
+      params
+    })
     items.value = data.map((obj) => ({
       ...obj,
       isFavorite: true,
       isAdded: false
     }))
-  } catch (error) {
-    console.log(error)
-  }
-}
-
-const sortedItems = async () => {
-  try {
-    console.log(filter.sortBy)
-    const { data } = await axios.get<Card[]>(
-      'https://604781a0efa572c1.mokky.dev/items?sortBy=' + filter.sortBy
-    )
-    console.log(data)
-    items.value = data
   } catch (error) {
     console.log(error)
   }
@@ -63,7 +80,7 @@ onMounted(async () => {
   await fetchItems()
   await fetchFavorites()
 })
-watch(() => filter.sortBy, sortedItems)
+watch(() => filter.sortBy, fetchItems)
 </script>
 
 <template>
@@ -91,7 +108,7 @@ watch(() => filter.sortBy, sortedItems)
         </div>
       </div>
 
-      <CardList :items="items" />
+      <CardList :items="items" @addFavoriteEmit="addFavoriteEmit" />
     </div>
   </div>
 </template>

@@ -1,3 +1,4 @@
+
 export interface Card{
     id:number
     imageUrl: string,
@@ -6,7 +7,7 @@ export interface Card{
     isFavorite?: Boolean,
     isAdded?: Boolean,
     onClickAdd?: () => void,
-    onClickFavorite?: ()=>void,
+    onClickFavorite?: (item:Card)=>void,
     favoriteId?: number,
     parentId?: number
 }
