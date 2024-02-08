@@ -7,12 +7,16 @@ import Search from './assets/icons/search.svg'
 import './main.css'
 import type { Card, Params } from './types'
 import DrawerModal from './components/DrawerModal.vue'
+import type { InjectionKey } from 'vue'
 const items = ref<Card[]>([]);
 const onDrawerOpen=ref(false);
 
 const onChangeModal=()=>{
   onDrawerOpen.value=!onDrawerOpen.value
 }
+
+// const cardActions =Symbol() as InjectionKey<()=>void>
+provide("cardActions",onChangeModal)
 
 const filter = reactive({
   sortBy: '',
