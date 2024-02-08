@@ -1,2 +1,3 @@
-export type { Card } from './Card'
-export type {Params} from './Params'
+export type { Basket, Card } from './Card'
+export type { Params } from './Params'
+

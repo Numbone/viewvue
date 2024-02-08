@@ -5,11 +5,12 @@ import axios from 'axios'
 import { onMounted, provide, reactive, ref, watch } from 'vue'
 import Search from './assets/icons/search.svg'
 import './main.css'
-import type { Card, Params } from './types'
+import type { Basket, Card, Params } from './types'
 import DrawerModal from './components/DrawerModal.vue'
 import type { InjectionKey } from 'vue'
 const items = ref<Card[]>([]);
 const onDrawerOpen=ref(false);
+const basket=ref<Basket[]>([])
 
 const onChangeModal=()=>{
   onDrawerOpen.value=!onDrawerOpen.value
@@ -44,10 +45,24 @@ const addFavorite = async (item: Card) => {
   item.isFavorite = !item.isFavorite
 }
 
+const addToCart=(item:Card)=>{
+
+  const itemIndex=basket.value.findIndex(obj=>obj.id===item.id)
+  console.log(item)
+  if (itemIndex===-1){
+    console.log("here")
+    basket.value.push(item);
+    
+  }else{
+   basket.value.splice(itemIndex,1)
+  }
+  console.log(basket.value)
+}
+
 const addFavoriteEmit = async (item: Card) => {
   item.isFavorite = !item.isFavorite
 }
-
+provide('addToCart',addToCart)
 provide('addFavorite', addFavorite)
 const fetchItems = async () => {
   try {
@@ -103,7 +118,7 @@ watch(() => filter.sortBy, fetchItems)
 
 <template>
   <div class="bg-white w-4/5 m-auto rounded-xl mt-14">
-     <DrawerModal  @onOpen="onChangeModal" v-if="onDrawerOpen"/>
+     <DrawerModal :basket="basket"  @onOpen="onChangeModal" v-if="onDrawerOpen"/>
     <HeaderComponent @onOpen="onChangeModal" />
     <div class="p-10">
       <div class="flex justify-between items-center">
@@ -126,7 +141,7 @@ watch(() => filter.sortBy, fetchItems)
         </div>
       </div>
 
-      <CardList :items="items" @addFavoriteEmit="addFavoriteEmit" />
+      <CardList :items="items" @addFavoriteEmit="addFavoriteEmit" @addToCart="addToCart" />
     </div>
   </div>
 </template>

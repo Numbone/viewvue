@@ -5,7 +5,7 @@
       v-bind="item" 
       :key="index" 
       :onClickFavorite="()=>addFavorite &&addFavorite(item)" 
-      
+      :onClickAdd="()=>emit('addToCart',item)"
       />
   </div>
 </template>
@@ -15,9 +15,12 @@ import type { Card } from '@/types/Card';
 import { inject } from 'vue';
 import CardItem from './CardItem.vue';
 
-const emit=defineEmits(['addFavoriteEmit']);
+const emit=defineEmits(
+  ['addFavoriteEmit','addToCart'],
+  );
 
 const addFavorite =inject<(item:Card)=>void>("addFavorite")
+const addToCart =inject<(item:Card)=>void>("addToCart")
 defineProps({
   items: Array<Card>
 })

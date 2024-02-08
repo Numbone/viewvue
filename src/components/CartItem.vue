@@ -1,16 +1,13 @@
 <script setup lang="ts">
-defineProps({
-  img: String,
-  title: String,
-  price: Number,
-  onClickDelete: Function
-})
+import type { Basket } from '@/types';
+defineProps<Basket>()
 import Close from '@/assets/icons/close.svg'
+
 </script>
 
 <template>
   <div class="relative flex w-full border border-slate-100 rounded-xl p-4 gap-4">
-    <img :src="img" class="w-16 h-16" alt="Sneaker" />
+    <img :src="`/src/assets/images`+imageUrl" class="w-16 h-16" alt="Sneaker" />
     <div class="flex flex-col w-full">
       <p>{{ title }}</p>
       <div class="flex justify-between mt-5">

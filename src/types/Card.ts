@@ -3,11 +3,14 @@ export interface Card{
     id:number
     imageUrl: string,
     title: string,
-    price: Number,
+    price: number,
     isFavorite?: Boolean,
     isAdded?: Boolean,
-    onClickAdd?: () => void,
+    onClickAdd?: (item:Card) => void,
     onClickFavorite?: (item:Card)=>void,
+    onClickDelete?:(item:Card)=>void
     favoriteId?: number,
     parentId?: number
 }
+
+export type Basket=Pick<Card,"imageUrl"|"price"|"title"|"onClickDelete"|"id">
