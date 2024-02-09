@@ -4,20 +4,19 @@ import HeaderComponent from '@/components/HeaderComponent.vue'
 import axios from 'axios'
 import { onMounted, provide, reactive, ref, watch } from 'vue'
 import Search from './assets/icons/search.svg'
+import DrawerModal from './components/DrawerModal.vue'
 import './main.css'
 import type { Basket, Card, Params } from './types'
-import DrawerModal from './components/DrawerModal.vue'
-import type { InjectionKey } from 'vue'
-const items = ref<Card[]>([]);
-const onDrawerOpen=ref(false);
-const basket=ref<Basket[]>([])
+const items = ref<Card[]>([])
+const onDrawerOpen = ref(false)
+const basket = ref<Basket[]>([])
 
-const onChangeModal=()=>{
-  onDrawerOpen.value=!onDrawerOpen.value
+const onChangeModal = () => {
+  onDrawerOpen.value = !onDrawerOpen.value
 }
 
 // const cardActions =Symbol() as InjectionKey<()=>void>
-provide("cardActions",onChangeModal)
+provide('cardActions', onChangeModal)
 
 const filter = reactive({
   sortBy: '',
@@ -35,9 +34,9 @@ const addFavorite = async (item: Card) => {
       console.log(data)
       item.isFavorite = true
       item.favoriteId = data.id
-    }else{
-      await axios.delete('https://604781a0efa572c1.mokky.dev/favorites/'+item.favoriteId);
-      item.isFavorite=false
+    } else {
+      await axios.delete('https://604781a0efa572c1.mokky.dev/favorites/' + item.favoriteId)
+      item.isFavorite = false
     }
   } catch (error) {
     console.log(error)
@@ -45,24 +44,41 @@ const addFavorite = async (item: Card) => {
   item.isFavorite = !item.isFavorite
 }
 
-const addToCart=(item:Card)=>{
-
-  const itemIndex=basket.value.findIndex(obj=>obj.id===item.id)
-  console.log(item)
-  if (itemIndex===-1){
-    console.log("here")
-    basket.value.push(item);
-    
-  }else{
-   basket.value.splice(itemIndex,1)
+const addToCart = (basketItem: Card) => {
+  const findIndex = items.value.findIndex((obj) => obj.id === basketItem.id)
+  const itemIndex = basket.value.findIndex((obj) => obj.id === basketItem.id)
+  if (itemIndex === -1) {
+    basket.value.push(basketItem)
+    items.value[findIndex] = {
+      ...items.value[findIndex],
+      isAdded: true
+    }
+  } else {
+    basket.value.splice(itemIndex, 1)
+    items.value[findIndex] = {
+      ...items.value[findIndex],
+      isAdded: false
+    }
   }
-  console.log(basket.value)
+}
+const removeItemFromBasket = (id: number) => {
+  const indexItem = basket.value.find((obj) => obj.id === id)
+  if (indexItem !== null) {
+    for (let i=0; i < items.value.length; i++) {
+      let item = items.value[i];
+      if(item.id===id){
+        item.isAdded = false
+      }
+    };
+    basket.value=basket.value.filter(obj=>obj.id!==id)
+  }
 }
 
 const addFavoriteEmit = async (item: Card) => {
   item.isFavorite = !item.isFavorite
 }
-provide('addToCart',addToCart)
+provide('addToCart', addToCart)
+provide('removeItemFromBasket', removeItemFromBasket)
 provide('addFavorite', addFavorite)
 const fetchItems = async () => {
   try {
@@ -80,7 +96,7 @@ const fetchItems = async () => {
       ...obj,
       isFavorite: true,
       isAdded: false,
-      favoriteId:undefined
+      favoriteId: undefined
     }))
   } catch (error) {
     console.log(error)
@@ -118,7 +134,7 @@ watch(() => filter.sortBy, fetchItems)
 
 <template>
   <div class="bg-white w-4/5 m-auto rounded-xl mt-14">
-     <DrawerModal :basket="basket"  @onOpen="onChangeModal" v-if="onDrawerOpen"/>
+    <DrawerModal :basket="basket" @onOpen="onChangeModal" v-if="onDrawerOpen" />
     <HeaderComponent @onOpen="onChangeModal" />
     <div class="p-10">
       <div class="flex justify-between items-center">
